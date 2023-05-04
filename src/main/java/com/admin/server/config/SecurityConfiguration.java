@@ -32,17 +32,16 @@ public class SecurityConfiguration {
         successHandler.setDefaultTargetUrl(adminContextPath + "/");
         return http.authorizeHttpRequests((authorizeRequests) -> {
                     try {
-                        authorizeRequests.requestMatchers(
-                                        adminContextPath + "/instances",
-                                        adminContextPath + "/actuator/**",
-                                        adminContextPath + "/assets/**",
-                                        adminContextPath + "/login"
-                                ).permitAll()
+                        authorizeRequests
+                                .requestMatchers(adminContextPath + "/instances").permitAll()
+                                .requestMatchers(adminContextPath + "/actuator/**").permitAll()
+                                .requestMatchers(adminContextPath + "/assets/**").permitAll()
+                                .requestMatchers(adminContextPath + "/login").permitAll()
                                 .anyRequest().authenticated()
                                 .and().formLogin().loginPage(adminContextPath + "/login").successHandler(successHandler)
                                 .and().logout().logoutUrl(adminContextPath + "/logout")
                                 .and().httpBasic()
-                                .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+                                .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).disable();
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
